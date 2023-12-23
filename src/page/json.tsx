@@ -3,6 +3,7 @@ import CCodeEditor from "../component/ceditor";
 import CJsonViewer from "../component/cjsonviewer";
 import {
   beautifyJSON,
+  endsWith,
   isJsonString,
   strToJson,
   toOneLineJSON,
@@ -18,6 +19,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Flex,
 } from "@chakra-ui/react";
 
 export default function JsonViewer() {
@@ -30,62 +32,78 @@ export default function JsonViewer() {
   }, [data]);
 
   function handleChangeEditor(newValue: string | undefined) {
-    setData(String(newValue || ""));
-    if (CJsonViewerRef.current) {
-      CJsonViewerRef.current.setContent(strToJson(newValue || ""));
+    try {
+      let newJSONValue = strToJson(newValue || "");
+      setData(newValue || "");
+      if (CJsonViewerRef.current) {
+        CJsonViewerRef.current.setContent(newJSONValue);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
-  function handleChangeViewer(newValue: string) {
-    setData(String(newValue));
+  function handleChangeViewer(newValue: object) {
+    let newValueStr = JSON.stringify(newValue);
+    setData(newValueStr);
     if (CCodeEditorRef.current) {
-      CCodeEditorRef.current.setContent(beautifyJSON(newValue));
+      CCodeEditorRef.current.setContent(beautifyJSON(newValueStr));
     }
   }
   return (
     <div>
       <Grid templateColumns="repeat(2, 1fr)" gap={6}>
         <GridItem w="100%">
-          <Button
-            colorScheme="blue"
-            onClick={() => {
-              if (isJsonString(data)) {
-                CCodeEditorRef.current.setContent(toOneLineJSON(data));
-              }
-            }}
-          >
-            one line
-          </Button>
-          <Button
-            colorScheme="blue"
-            onClick={() => {
-              if (isJsonString(data)) {
-                CCodeEditorRef.current.setContent(beautifyJSON(data));
-              }
-            }}
-          >
-            format
-          </Button>
-          <HStack display="flex">
-            <FormLabel>Space:</FormLabel>
-            <NumberInput
-              defaultValue={2}
-              min={0}
-              placeholder="level"
-              onChange={(valueString: string) => {
-                if (isJsonString(data)) {
-                  CCodeEditorRef.current.setContent(
-                    beautifyJSON(data, valueString)
-                  );
+          <Flex>
+            <Button
+              colorScheme="blue"
+              onClick={() => {
+                let jsonData = JSON.stringify(strToJson(data));
+                console.log(jsonData);
+                if (
+                  isJsonString(jsonData) &&
+                  !jsonData.endsWith(" is not valid JSON or object")
+                ) {
+                  CCodeEditorRef.current.setContent(toOneLineJSON(jsonData));
+                  // setData(toOneLineJSON(jsonData));
                 }
               }}
             >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </HStack>
+              one line
+            </Button>
+            <Button
+              colorScheme="blue"
+              onClick={() => {
+                let jsonData = beautifyJSON(JSON.stringify(strToJson(data)));
+                if (isJsonString(jsonData)) {
+                  CCodeEditorRef.current.setContent(jsonData);
+                  setData(beautifyJSON(jsonData));
+                }
+              }}
+            >
+              format
+            </Button>
+            <HStack display="flex">
+              <FormLabel>Space:</FormLabel>
+              <NumberInput
+                defaultValue={2}
+                min={0}
+                placeholder="level"
+                onChange={(valueString: string) => {
+                  if (isJsonString(data)) {
+                    CCodeEditorRef.current.setContent(
+                      beautifyJSON(data, valueString)
+                    );
+                  }
+                }}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </HStack>
+          </Flex>
         </GridItem>
         <GridItem w="100%" h="10"></GridItem>
         <GridItem w="100%">
@@ -96,7 +114,7 @@ export default function JsonViewer() {
             ref={CCodeEditorRef}
           />
         </GridItem>
-        <GridItem w="100%">
+        <GridItem w="100%" style={{ textAlign: "left" }}>
           <CJsonViewer
             defaultValue={{}}
             onChange={handleChangeViewer}

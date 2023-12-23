@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
+import { isJsonString } from "../utility/jsonUtil";
 // If dark mode is needed, import `dark.css`.
 // import 'react18-json-view/src/dark.css'
 
@@ -11,10 +12,13 @@ function CInnerJsonViewer(
   },
   ref: React.Ref<unknown>
 ) {
-  const [data, setdata] = useState(props.defaultValue);
+  const [data, setdata] = useState("");
 
   useImperativeHandle(ref, () => ({
     setContent: (value: string) => {
+      if (isJsonString(value)) {
+        setdata(value);
+      }
       setdata(value);
     },
   }));

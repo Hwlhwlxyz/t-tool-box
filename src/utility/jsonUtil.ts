@@ -4,6 +4,7 @@ export function isJsonString(str: string) {
   try {
     JSON.parse(str);
   } catch (e) {
+    console.log("not jsonString:", e);
     return false;
   }
   return true;
@@ -21,7 +22,8 @@ export function strToJson(inputStr: string) {
     return j;
   } catch (e) {
     console.log("parse error", e);
-    return inputStr + " is not valid JSON or object";
+    throw e;
+    // return inputStr + " is not valid JSON or object";
   }
   // return null;
 }
@@ -49,10 +51,15 @@ export function beautifyJSON(inputStr: string, space: string | number | null = n
   try {
     console.log("input", inputStr)
     let j = strToJson(inputStr);
-    return beautify(j, null as any, space, 80)
+    return beautify(j, null as any, space, 30)
   }
   catch (e) {
     console.log("parse error", e);
   }
   return inputStr
+}
+
+export function endsWith(str: string, suffix: string) {
+  console.log("str, suffix: ", str, suffix)
+  return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
