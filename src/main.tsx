@@ -7,7 +7,6 @@ import CCodeEditor from "./component/ceditor";
 import CJsonViewer from "./component/cjsonviewer";
 import JsonViewer from "./page/json";
 import { ChakraProvider } from "@chakra-ui/react";
-import SidenavItems from "./component/SidenavItems";
 import Root from "./page/root";
 
 const router = createBrowserRouter([

@@ -1,14 +1,4 @@
-import {
-  List,
-  ListItem,
-  Icon,
-  Flex,
-  Text,
-  Link,
-  Tooltip,
-  IconButton,
-  Stack,
-} from "@chakra-ui/react";
+import { Flex, Text, Link, Stack } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 
 export interface SidenavItem {
@@ -22,7 +12,7 @@ export interface SidenavItemsProps {
   mode?: "semi" | "over";
 }
 
-export function SidenavItems({ navItems, mode = "semi" }: SidenavItemsProps) {
+export function SidenavItems({ navItems }: SidenavItemsProps) {
   const sidebarItemInOverMode = (item: SidenavItem, index: number) => (
     <Stack spacing="24px" key={index}>
       <Link

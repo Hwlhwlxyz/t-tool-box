@@ -1,11 +1,5 @@
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
-import Editor, { useMonaco } from "@monaco-editor/react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import Editor from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
 function CInnerCodeEditor(
@@ -26,7 +20,7 @@ function CInnerCodeEditor(
   //     ...monacoHook.languages.json.jsonDefaults.diagnosticsOptions,
   //     validate: false,
   //     // trailingCommas: "error", // this will show a validation error as desired
-  //     // comments: "error", // this disables comments in JSON (not what you asked, but something I find useful)
+  //     // comments: "error", // this disables comments in JSON
   //   });
   // }, [monacoHook]);
 
@@ -42,9 +36,10 @@ function CInnerCodeEditor(
     monaco: object
   ) {
     editorRef.current = editor;
+    console.log(monaco);
   }
 
-  function handleEditorChange(value: string | undefined, event: object) {
+  function handleEditorChange(value: string | undefined) {
     // console.log("here is the current model value:", value);
     if (props.onChange) {
       props.onChange(value);

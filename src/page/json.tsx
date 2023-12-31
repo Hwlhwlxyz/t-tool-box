@@ -3,7 +3,6 @@ import CCodeEditor from "../component/ceditor";
 import CJsonViewer from "../component/cjsonviewer";
 import {
   beautifyJSON,
-  endsWith,
   isJsonString,
   strToJson,
   toOneLineJSON,
